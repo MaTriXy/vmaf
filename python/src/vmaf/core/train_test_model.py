@@ -1108,12 +1108,16 @@ class BootstrapMixin(object):
             'num_models'] if 'num_models' in param_dict else cls.DEFAULT_NUM_MODELS
         return num_models
 
+    def get_num_type_bootstrap_models(self):
+        return 'N = ' + str(self._get_num_models())
+
     def predict(self, xs):
         # override TrainTestModel.predict()
         xs_2d = self._preproc_predict(xs)
 
         models = self.model
         num_models = self._get_num_models()
+        num_type_bootstrap_models = self.get_num_type_bootstrap_models()
         assert num_models == len(models)
 
         # first model: conventional prediction
@@ -1139,6 +1143,7 @@ class BootstrapMixin(object):
                     'ys_label_pred_stddev': ys_label_pred_stddev,
                     'ys_label_pred_ci95_low': ys_label_pred_ci95_low,
                     'ys_label_pred_ci95_high': ys_label_pred_ci95_high,
+                    'num_type_bootstrap_models': num_type_bootstrap_models,
                     }
         else:
             return {'ys_label_pred': ys_label_pred,

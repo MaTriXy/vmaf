@@ -270,10 +270,16 @@ def run_test_on_dataset(test_dataset, runner_class, ax,
                                      ys_label_pred_ci95_low=predictions_ci95_low,
                                      ys_label_pred_ci95_high=predictions_ci95_high,
                                      ys_label_stddev=groundtruths_std)
+        # get number and type of bootstrapped models and check if they are always the same
+        num_type_bootstrap_models_list = map(lambda result: result['num_type_bootstrap_models'], results)
+        assert len(set(num_type_bootstrap_models_list)) == 1
+        # pick first index, since all are the same (pre-append change-of-line character for display purposes)
+        num_type_bootstrap_models = '\n' + num_type_bootstrap_models_list[0]
     except:
         stats = model_type.get_stats(groundtruths, predictions,
                                      ys_label_raw=raw_grountruths,
                                      ys_label_stddev=groundtruths_std)
+        num_type_bootstrap_models = ''
 
     print 'Stats on testing data: {}'.format(model_type.format_stats_for_print(stats))
 
@@ -294,10 +300,11 @@ def run_test_on_dataset(test_dataset, runner_class, ax,
         ax.set_xlabel('True Score')
         ax.set_ylabel("Predicted Score")
         ax.grid()
-        ax.set_title("{runner}\n{stats}".format(
+        ax.set_title("{runner}{num_type_bootstrap_models}\n{stats}".format(
             dataset=test_assets[0].dataset,
             runner=runner_class.TYPE,
             stats=model_type.format_stats_for_plot(stats),
+            num_type_bootstrap_models=num_type_bootstrap_models,
         ))
 
     return test_assets, results

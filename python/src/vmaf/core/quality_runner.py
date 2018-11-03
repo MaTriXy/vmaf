@@ -926,6 +926,7 @@ class BootstrapVmafQualityRunner(VmafQualityRunner):
         result_dict[self.get_stddev_scores_key()] = pred_result['ys_pred_stddev']  # add stddev of bootstrapped quality score
         result_dict[self.get_ci95_low_scores_key()] = pred_result['ys_pred_ci95_low']  # add ci95 of bootstrapped quality score
         result_dict[self.get_ci95_high_scores_key()] = pred_result['ys_pred_ci95_high']  # add ci95 of bootstrapped quality score
+        result_dict['num_type_bootstrap_models'] = pred_result['num_type_bootstrap_models'] # add num/type of bootstrapped models
         return result_dict
 
     @classmethod
@@ -939,6 +940,7 @@ class BootstrapVmafQualityRunner(VmafQualityRunner):
         ys_pred_ci95_high = result['ys_label_pred_ci95_high']
         ys_pred_plus = ys_pred_bagging + DELTA
         ys_pred_minus = ys_pred_bagging - DELTA
+        num_type_bootstrap_models = model.get_num_type_bootstrap_models()
 
         do_transform_score = cls._do_transform_score(kwargs)
         if do_transform_score:
@@ -970,6 +972,7 @@ class BootstrapVmafQualityRunner(VmafQualityRunner):
                 'ys_pred_stddev': ys_pred_stddev,
                 'ys_pred_ci95_low': ys_pred_ci95_low,
                 'ys_pred_ci95_high': ys_pred_ci95_high,
+                'num_type_bootstrap_models': num_type_bootstrap_models,
                 }
 
     def get_train_test_model_class(self):
